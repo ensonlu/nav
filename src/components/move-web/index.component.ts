@@ -1,3 +1,4 @@
+// 开源项目MIT，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息，允许商业途径。
 // Copyright @ 2018-present xiejiahe. All rights reserved. MIT license.
 // See https://github.com/xjh22222228/nav
 
@@ -19,13 +20,14 @@ export class MoveWebComponent {
   websiteList: INavProps[] = websiteList
   twoOptList: INavTwoProp[] = []
   threeOptList: INavThreeProp[] = []
-  checked = false
+  isCopy = false
   oneSelect: number | undefined
   twoSelect: number | undefined
   threeSelect: number | undefined
-  moveSites: IWebProps[] = []
+  moveSites: any[] = []
   showModal = false
   indexs: Array<number> = []
+  level = 4
 
   constructor(private message: NzMessageService) {
     event.on('MOVE_WEB', (props: any) => {
@@ -40,10 +42,17 @@ export class MoveWebComponent {
     props: {
       indexs: number[]
       data: IWebProps[]
+      level: number
     }
   ) {
+    ctx.oneSelect = undefined
+    ctx.twoSelect = undefined
+    ctx.threeSelect = undefined
+    ctx.twoOptList = []
+    ctx.threeOptList = []
     ctx.indexs = props.indexs
     ctx.moveSites = props.data
+    ctx.level = props.level ?? 4
     ctx.showModal = true
   }
 
@@ -77,38 +86,81 @@ export class MoveWebComponent {
   }
 
   hanldeOk() {
-    if (this.threeSelect == null) {
-      return this.message.error($t('_sel3'))
-    }
     const indexs = this.indexs.filter((i) => i != null)
-    if (indexs.length !== 4) {
-      return this.message.error(`move web: indexs数量不正确${indexs.join(',')}`)
-    }
+    const oneSelect = this.oneSelect as number
+    const twoSelect = this.twoSelect as number
+    const threeSelect = this.threeSelect as number
 
     try {
-      const oneSelect = this.oneSelect as number
-      const twoSelect = this.twoSelect as number
-      const threeSelect = this.threeSelect as number
-      this.moveSites.forEach((item: IWebProps) => {
-        const exists = this.websiteList[oneSelect].nav[twoSelect].nav[
-          threeSelect
-        ].nav.find((el: IWebProps) => el.name === item.name)
+      const moveSites = JSON.parse(JSON.stringify(this.moveSites))
+      if (this.level === 2) {
+        if (this.oneSelect == null) {
+          return this.message.error($t('_sel1'))
+        }
+        moveSites.forEach((item: any) => {
+          const exists = this.websiteList[oneSelect].nav.find(
+            (el: any) => el.title === item.title
+          )
 
-        if (exists) {
-          this.message.error(`${$t('_repeatAdd')} "${item.name}"`)
-        } else {
+          if (exists) {
+            this.message.error(`${$t('_repeatAdd')} "${item.title}"`)
+          } else {
+            this.websiteList[oneSelect].nav.unshift(item)
+
+            if (!this.isCopy) {
+              const [a, b, c, d] = indexs
+              this.websiteList[a].nav.splice(d, 1)
+            }
+
+            this.message.success(`"${item.title}" ${$t('_moveSuccess')}`)
+          }
+        })
+      } else if (this.level === 3) {
+        if (this.twoSelect == null) {
+          return this.message.error($t('_sel2'))
+        }
+        moveSites.forEach((item: any) => {
+          const exists = this.websiteList[oneSelect].nav[twoSelect].nav.find(
+            (el: any) => el.title === item.title
+          )
+
+          if (exists) {
+            this.message.error(`${$t('_repeatAdd')} "${item.title}"`)
+          } else {
+            this.websiteList[oneSelect].nav[twoSelect].nav.unshift(item)
+
+            if (!this.isCopy) {
+              const [a, b, c, d] = indexs
+              this.websiteList[a].nav[b].nav.splice(d, 1)
+            }
+
+            this.message.success(`"${item.title}" ${$t('_moveSuccess')}`)
+          }
+        })
+      } else if (this.level === 4) {
+        if (this.threeSelect == null) {
+          return this.message.error($t('_sel3'))
+        }
+        if (indexs.length !== 4) {
+          return this.message.error(
+            `move web: indexs数量不正确${indexs.join(',')}`
+          )
+        }
+        moveSites.forEach((item: any) => {
+          item.id = item.id + `${Math.random()}`
           this.websiteList[oneSelect].nav[twoSelect].nav[
             threeSelect
           ].nav.unshift(item)
 
-          if (!this.checked) {
+          if (!this.isCopy) {
             const [a, b, c, d] = indexs
             this.websiteList[a].nav[b].nav[c].nav.splice(d, 1)
           }
 
           this.message.success(`"${item.name}" ${$t('_moveSuccess')}`)
-        }
-      })
+        })
+      }
+
       setWebsiteList(this.websiteList)
       this.handleCancel()
     } catch (error: any) {

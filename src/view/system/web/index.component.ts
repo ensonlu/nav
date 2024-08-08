@@ -1,18 +1,19 @@
 // @ts-nocheck
+// 开源项目MIT，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息，允许商业途径。
 // Copyright @ 2018-present xiejiahe. All rights reserved. MIT license.
 // See https://github.com/xjh22222228/nav
 
 import { Component } from '@angular/core'
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 import { INavProps, INavTwoProp, INavThreeProp, IWebProps } from 'src/types'
-import { websiteList, settings, tagMap } from 'src/store'
-import { isLogin } from 'src/utils/user'
+import { websiteList, settings, tagMap, internal } from 'src/store'
+import { isLogin, removeWebsite } from 'src/utils/user'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzModalService } from 'ng-zorro-antd/modal'
 import { NzNotificationService } from 'ng-zorro-antd/notification'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { setWebsiteList, deleteByWeb, getTextContent } from 'src/utils'
-import { updateFileContent } from 'src/services'
+import { updateFileContent } from 'src/api'
 import { DB_PATH, STORAGE_KEY_MAP } from 'src/constants'
 import config from '../../../../nav.config'
 import { $t } from 'src/locale'
@@ -27,6 +28,7 @@ import event from 'src/utils/mitt'
 export default class WebpComponent {
   $t = $t
   settings = settings
+  internal = internal
   validateForm!: FormGroup
   websiteList: INavProps[] = websiteList
   gitRepoUrl = config.gitRepoUrl
@@ -219,7 +221,7 @@ export default class WebpComponent {
       nzContent: $t('_warnReset'),
       nzOnOk: () => {
         this.message.success($t('_actionSuccess'))
-        window.localStorage.removeItem(STORAGE_KEY_MAP.website)
+        removeWebsite()
         window.localStorage.removeItem(STORAGE_KEY_MAP.s_url)
         setTimeout(() => {
           window.location.reload()
@@ -260,7 +262,7 @@ export default class WebpComponent {
     history.go(-1)
   }
 
-  openMoveWebModal(data: IWebProps, index: number) {
+  openMoveWebModal(data: any, index: number, level?: number) {
     const oneIndex = this.websiteList.findIndex(
       (item) => item.title === this.oneSelect
     )
@@ -273,6 +275,7 @@ export default class WebpComponent {
     event.emit('MOVE_WEB', {
       indexs: [oneIndex, twoIndex, threeIndex, index],
       data: [data],
+      level,
     })
   }
 

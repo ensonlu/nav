@@ -10,17 +10,17 @@ const internalPath = path.join('.', 'data', 'internal.json')
 const settingsPath = path.join('.', 'data', 'settings.json')
 const tagPath = path.join('.', 'data', 'tag.json')
 
-let internal, db, settings, tags
+let internal = {}
+let db = []
+let settings = {}
+let tags = []
 try {
-  internal = JSON.parse(fs.readFileSync(internalPath).toString())
-  db = JSON.parse(fs.readFileSync(dbPath).toString())
-  settings = JSON.parse(fs.readFileSync(settingsPath).toString())
-  tags = JSON.parse(fs.readFileSync(tagPath).toString())
+  internal = JSON.parse(fs.readFileSync(internalPath).toString() || '{}')
+  db = JSON.parse(fs.readFileSync(dbPath).toString() || '[]')
+  settings = JSON.parse(fs.readFileSync(settingsPath).toString() || '{}')
+  tags = JSON.parse(fs.readFileSync(tagPath).toString() || '[]')
 } catch (error) {
-  internal = {}
-  db = []
-  settings = {}
-  tags = []
+  console.log('parse JSON: ', error.message)
 }
 
 const TAG_ID1 = -1
@@ -100,13 +100,14 @@ const TAG_ID_NAME3 = 'Github'
   settings.openSEO ??= true
   settings.headerContent ??= ''
   settings.footerContent ??=
-    '<div style="font-weight: bold;">共收录${total}个网站</div><div>Copyright © 2018-${year} ${hostname}, All Rights Reserved</div>'
+    '<div>共收录${total}个网站</div><div>Copyright © 2018-${year} ${hostname}, All Rights Reserved</div>'
   settings.baiduStatisticsUrl ??=
     'https://hm.baidu.com/hm.js?4582be7af7e7c95ef75351e07c6c32ba'
   settings.cnzzStatisticsUrl ??= ''
   settings.showThemeToggle ??= true
   settings.lightCardStyle ||= 'standard'
   settings.lightOverType ||= 'overflow'
+  settings.lightFooterHTML ||= ''
   settings.simThemeImages ||= [
     {
       src: banner1,
@@ -128,8 +129,10 @@ const TAG_ID_NAME3 = 'Github'
   settings.simThemeHeight ??= 0
   settings.simThemeAutoplay ??= true
   settings.simTitle ||= ''
+  settings.simFooterHTML ||= ''
   settings.superCardStyle ||= 'column'
   settings.superOverType ||= 'overflow'
+  settings.superFooterHTML ||= ''
   // 更名
   if (settings.superCardStyle === 'super') {
     settings.superCardStyle = 'column'
@@ -156,8 +159,10 @@ const TAG_ID_NAME3 = 'Github'
   }
   settings.sideTitle ||= ''
   settings.sideCardStyle ||= 'example'
+  settings.sideFooterHTML ||= ''
   settings.sideThemeHeight ??= 0
   settings.sideThemeAutoplay ??= true
+  settings.sideCollapsed ??= false
   settings.sideThemeImages ||= [
     {
       src: banner2,
@@ -186,8 +191,12 @@ const TAG_ID_NAME3 = 'Github'
   settings.spiderIcon ??= 'NO'
   settings.spiderDescription ??= 'NO'
   settings.spiderTitle ??= 'NO'
-  settings.spiderQty ??= 20
+  settings.spiderQty ??= 200
+  settings.spiderTimeout ??= 6
+  settings.spiderTimeout = Number(settings.spiderTimeout) || 6
   settings.loadingCode ??= ''
+
+  settings.appCardStyle ??= 'common'
   fs.writeFileSync(settingsPath, JSON.stringify(settings), {
     encoding: 'utf-8',
   })
@@ -242,10 +251,6 @@ export function getWebCount(websiteList) {
 const { userViewCount, loginViewCount } = getWebCount(db)
 internal.userViewCount = userViewCount < 0 ? loginViewCount : userViewCount
 internal.loginViewCount = loginViewCount
-console.log(`
-userViewCount: ${internal.userViewCount}
-loginViewCount: ${internal.loginViewCount}
-`)
 fs.writeFileSync(internalPath, JSON.stringify(internal), { encoding: 'utf-8' })
 
 // 设置网站的面包屑类目显示
@@ -278,6 +283,18 @@ function setWeb(nav) {
             const navItemItem = navItem.nav[k]
             removeIconFont(navItemItem)
             formatDate(navItemItem)
+
+            navItemItem.nav.sort((a, b) => {
+              const aIdx =
+                a.index == null || a.index === ''
+                  ? Number.MAX_SAFE_INTEGER
+                  : a.index
+              const bIdx =
+                b.index == null || b.index === ''
+                  ? Number.MAX_SAFE_INTEGER
+                  : b.index
+              return aIdx - bIdx
+            })
             if (navItemItem.nav) {
               for (let l = 0; l < navItemItem.nav.length; l++) {
                 let breadcrumb = []
@@ -302,6 +319,14 @@ function setWeb(nav) {
 
                 delete webItem.__desc__
                 delete webItem.__name__
+
+                // 节省空间
+                if (!webItem.top) {
+                  delete webItem.top
+                }
+                if (!webItem.ownVisible) {
+                  delete webItem.ownVisible
+                }
 
                 // 兼容现有标签,以id为key
                 for (let k in webItem.urls) {

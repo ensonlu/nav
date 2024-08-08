@@ -1,4 +1,6 @@
+// 开源项目MIT，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息，允许商业途径。
 const english: Record<string, string> = {
+  _loading: 'Loading...',
   _webTitle: 'Discovery Navigation',
   _uncategorized: 'Unclassified',
   _modifySuccess: 'Modification succeeded!',
@@ -6,6 +8,7 @@ const english: Record<string, string> = {
   _copyUrl: 'Copy Link',
   _shareWeb: 'Share site',
   _edit: 'Edit',
+  _sort: 'Sort',
   _refresh: 'Refresh',
   _add: 'Add',
   _del: 'Delete',
@@ -76,7 +79,6 @@ const english: Record<string, string> = {
   _addTag: 'Add category',
   _addWeb: 'Add site',
   _clickEdit: 'Click Edit',
-  _importChrome: 'Import from Chrome bookmarks',
   _allContentMsg1:
     '1. After setting all data, click "synchronize to remote end" and drag the table to sort',
   _allContentMsg2: '2. Website category needs to be maintained manually,',
@@ -105,7 +107,7 @@ const english: Record<string, string> = {
   _iconAddr: 'Icon Link',
   _copyUpload: 'Support to paste screenshots or copy pictures here to upload',
   _upload: 'Upload',
-  _continueAdd: 'Continue to add affiliate links',
+  _continueAdd: 'Continue adding associated links or tags',
   _moveTo: 'Move to',
   _move: 'Move',
   _copy: 'Copy',
@@ -118,11 +120,13 @@ const english: Record<string, string> = {
   _systemSet: 'Settings',
   _searchEngines: 'Engines',
   _userCollect: 'Collect',
-  _bookmarkImport: 'Bookmark',
+  _bookmarkImport: 'Book Import',
+  _bookmarkExport: 'Book Export',
+  _vipAuth: 'VIP Auth',
   _tagSettings: 'Tag settings',
   _websiteMang: 'Website',
   _addRow: 'Add',
-  _bookImportTip: `<p>Supports most mainstream browsers based on the webkit kernel. If the import fails, it is temporarily not supported</p>`,
+  _bookImportTip: `<p>Supports most mainstream browsers. If the import fails, it is temporarily not supported</p>`,
   _engineName: 'Engine name',
   _status: 'Status',
   _isDisable: 'Disable',
@@ -195,8 +199,6 @@ const english: Record<string, string> = {
   _sidebarTitle: 'Sidebar title',
   _defTitle4: 'Default website title, recommended to be within 4 words',
   _inputAuthCode: 'Please enter the authorization code',
-  _payTip:
-    'Opening user enrollment requires a payment of ￥99 as a contribution to the stable operation of this website. Thank you for your understanding',
   _waitHandle: 'Waiting for the stationmaster to handle',
   _collect: 'Get',
   _confirmCollect: 'Are you sure?',
@@ -216,6 +218,12 @@ const english: Record<string, string> = {
     'Due to network factors, some websites may not be accessible and can be skipped directly. For reference only',
   _spiderBuildTip:
     'After the construction is completed, the data is correct. Please go to the website management and click save once, otherwise the data will not be permanently stored',
+  _associatedLabels: 'Labels',
+  _menuCollapse: 'Menu Collapse',
+  _retro: 'Retro',
+  _accessTimeout: 'Access timeout (seconds)',
+  _accessTimeoutTip:
+    'Crawl the website for a specified number of seconds with no response, skip, The larger the number, the higher the success rate, but the slower it is',
 }
 
 export default english
