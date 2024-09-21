@@ -1,4 +1,4 @@
-// Copyright @ 2018-present xiejiahe. All rights reserved. MIT license.
+// Copyright @ 2018-present xiejiahe. All rights reserved.
 // See https://github.com/xjh22222228/nav
 
 // <html>
@@ -16,6 +16,9 @@
 
     &-white {
       color: #fff !important;
+      &-700 {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
     }
 
     &-shadow {
