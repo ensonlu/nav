@@ -26,7 +26,7 @@ password: admin
 port: 55555
 
 # 收录通知邮箱
-email: ''
+email: 'enson_lu@163.com'
 
 # 自有部署邮件通知系统
 mailConfig:
