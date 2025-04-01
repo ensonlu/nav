@@ -1,11 +1,10 @@
 // 开源项目，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息。
 // Copyright @ 2018-present xiejiahe. All rights reserved.
 // See https://github.com/xjh22222228/nav
-import { isSelfDevelop } from 'src/utils/util'
+import { isSelfDevelop } from 'src/utils/utils'
 
 const zhCN: Record<string, any> = {
   _loading: '加载中...',
-  _webTitle: '发现导航',
   _uncategorized: '未分类',
   _modifySuccess: '修改成功！',
   _copySuccess: '复制成功',
@@ -48,9 +47,7 @@ const zhCN: Record<string, any> = {
   _confirmSyncTip: isSelfDevelop
     ? ''
     : '确定将所有数据同步到远端吗？（每次保存需要等待构建完成再进行下一次操作）',
-  _syncSuccessTip: isSelfDevelop
-    ? '同步成功'
-    : '同步成功, 大约需要5分钟构建时间',
+  _syncSuccessTip: isSelfDevelop ? '同步成功' : '同步成功, 正在构建...',
   _error: '错误',
   _syncFailTip: '同步失败, 请重试',
   _inputToken: '请输入TOKEN',
@@ -171,7 +168,7 @@ const zhCN: Record<string, any> = {
     '上次检测出 {count} 个网站链接失效，具体到管理网站查看，如需再次检测状态直接点保存触发事件即可。',
   _buildTip: '修改完请保存并等待构建完成，离开无效',
   _enableSEO: '开启SEO(加载稍慢)',
-  _allowCollect: '允许用户提交收录',
+  _allowUser: '允许用户提交',
   _collectMenuView: `具体到用户收录菜单查看`,
   _displaySwitchTheme: '显示切换主题',
   _requestAddress: '请求地址',
@@ -190,7 +187,7 @@ const zhCN: Record<string, any> = {
   _sidebarTitle: '侧栏标题',
   _defTitle4: '默认网站标题, 建议4字以内',
   _inputAuthCode: '请输入授权码',
-  _waitHandle: '提交成功，等待站长处理',
+  _waitHandle: '提交成功，等待站长审核',
   _collect: '收录',
   _confirmCollect: '您确定要收录吗？',
   _pendingGet: '正在获取...',
@@ -199,6 +196,7 @@ const zhCN: Record<string, any> = {
   _spiderTitle: '更新标题',
   _spiderIcon: '更新图标',
   _spiderDesc: '更新描述',
+  _spiderImg: '更新图片',
   _notSpider: '不更新',
   _spiderAlways: '总是更新',
   _spiderEmpty: '为空时更新',
@@ -278,6 +276,34 @@ const zhCN: Record<string, any> = {
   _dayIs: '今天是',
   _rest: '休',
   _distance: '距离',
+  _collectTip: '有用户申请收录请去处理',
+  _colTitle: '收录处理（{count}）',
+  _type: '类型',
+  _handle: '处理',
+  _headCode: '<head>可以在这里插入样式、脚本、统计等</head>',
+  _hours: '{num}小时',
+  _minutes: '{num}分钟',
+  _seconds: '{num}秒',
+  _same: '引用',
+  _sameExists: '已存在',
+  _checkRepeat: '检重URL',
+  _repeatTip: '该分类下可能存在重复URL',
+  _tag: '标签',
+  _translate: '翻译',
+  _searchRes: '搜索结果',
+  _class: '分类',
+  _quote: '引用',
+  _poster: '海报',
+  _screenshot: '截图',
+  _imgPlaceholder: '应用在海报卡片',
+  _urlNoRepeat: '该分类下链接未查出重复',
+  _confInfo: '配置信息',
+  _submitNotice: '收录通知',
+  _password: '密码',
+  _address: '地址',
+  _apiPass: '讯飞大模型密钥',
+  _createWebKey: '按下创建网站',
+  _onlyDelItem: '只删除该项目',
 }
 
 export default zhCN

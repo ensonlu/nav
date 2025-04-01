@@ -2,7 +2,7 @@
   <nz-spin
     nzSimple
     *ngIf="commonService.sliceMax === 0"
-    class="position-center"
+    class="position-center z-50 mt-24"
   />
   <nz-layout>
     <nz-sider
@@ -18,7 +18,11 @@
         }}</span>
       </div>
 
-      <ul nz-menu nzMode="inline" class="sider dark-scrollbar dark-bg">
+      <ul
+        nz-menu
+        nzMode="inline"
+        class="sider dark-scrollbar dark-bg select-none"
+      >
         <li
           nz-submenu
           *ngFor="
@@ -26,9 +30,9 @@
             index as pageIdx;
             trackBy: commonService.trackByItem
           "
-          (nzOpenChange)="openMenu(item, pageIdx)"
+          (nzOpenChange)="openMenu(item)"
           [nzTitle]="titleTpl"
-          [nzOpen]="item['collapsed']"
+          [nzOpen]="item.id === menuOpenId"
         >
           <ng-template #titleTpl>
             <img *ngIf="item.icon" class="sideicon" [src]="item.icon" />
@@ -50,16 +54,18 @@
                 trackBy: commonService.trackByItem
               "
               [nzSelected]="
-                commonService.page === pageIdx && commonService.id === idIdx
+                commonService.oneIndex === pageIdx &&
+                commonService.twoIndex === idIdx
               "
-              (click)="commonService.handleSidebarNav(idIdx, pageIdx)"
+              (click)="commonService.handleClickClass(el.id)"
             >
               <img *ngIf="el.icon" class="sideicon fixicon" [src]="el.icon" />
               <span class="ellipsis">{{ el.title }}</span>
 
               <div
                 *ngIf="
-                  commonService.page === pageIdx && commonService.id === idIdx
+                  commonService.oneIndex === pageIdx &&
+                  commonService.twoIndex === idIdx
                 "
                 (click)="commonService.onCollapseAll($event)"
                 class="collapse-wrapper"
@@ -90,7 +96,7 @@
 
       <component-group></component-group>
 
-      <app-search-engine class="mobile-search" />
+      <app-search class="mobile-search" />
 
       <nz-content class="content" id="content">
         <app-web-list [search]="false" [overflow]="true" />
@@ -110,39 +116,27 @@
               <div class="nav-wrapper">
                 <app-toolbar-title
                   [dataSource]="item"
-                  (onCollapse)="commonService.onCollapse(item, i)"
-                  [index]="i"
+                  (onCollapse)="commonService.onCollapse(item)"
                 />
 
                 <div
-                  nz-row
-                  [nzGutter]="[16, 16]"
-                  [style.display]="item.collapsed ? 'none' : ''"
+                  class="grid gap-x-4 gap-y-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4"
+                  [class.hidden]="item['collapsed']"
+                  [ngClass]="{
+                    '2xl:grid-cols-6':
+                      commonService.settings.sideCardStyle === 'original' ||
+                      commonService.settings.sideCardStyle === 'example'
+                  }"
                 >
-                  <div
+                  <app-card
                     *ngFor="
                       let el of item.nav;
-                      index as j;
                       trackBy: commonService.trackByItemWeb
                     "
-                    class="gutter-row"
-                    nz-col
-                    [nzSpan]="6"
-                    [nzXs]="24"
-                    [nzSm]="12"
-                    [nzMd]="12"
-                    [nzLg]="8"
-                    [nzXl]="6"
-                    [nzXXl]="nzXXl"
-                  >
-                    <app-card
-                      [cardStyle]="commonService.settings.sideCardStyle"
-                      [dataSource]="el"
-                      [indexs]="[commonService.page, commonService.id, i, j]"
-                      [searchKeyword]="commonService.searchKeyword"
-                      class="column-border"
-                    />
-                  </div>
+                    [cardStyle]="commonService.settings.sideCardStyle"
+                    [dataSource]="el"
+                    class="column-border"
+                  />
                 </div>
               </div>
             </div>

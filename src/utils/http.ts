@@ -1,19 +1,25 @@
 // 开源项目，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息。
 // Copyright @ 2018-present xiejiahe. All rights reserved.
+// See https://github.com/xjh22222228/nav
 
 import axios from 'axios'
 import NProgress from 'nprogress'
 import config from '../../nav.config.json'
 import event from './mitt'
 import { settings } from 'src/store'
-import { getToken, getAuthCode } from '../utils/user'
+import { getToken, getAuthCode, removeAuthCode } from '../utils/user'
 import { isLogin } from 'src/utils/user'
+import { getIsGitee } from 'src/utils/pureUtils'
+
+export function getAddress(): string {
+  return globalThis.__ADDRESS__ || config.address || ''
+}
 
 const httpInstance = axios.create({
   timeout: 60000 * 3,
   baseURL:
-    config.address ||
-    (config.gitRepoUrl.includes('gitee.com')
+    getAddress() ||
+    (getIsGitee(config.gitRepoUrl)
       ? 'https://gitee.com/api/v5'
       : 'https://api.github.com'),
 })
@@ -54,34 +60,44 @@ httpInstance.interceptors.response.use(
       type: 'error',
       title: 'Error：' + status,
       content: errorMsg,
+      config: {
+        nzDuration: 20000,
+      },
     })
     stopLoad()
     return Promise.reject(error)
   }
 )
 
+export const HTTP_BASE_URL = 'https://api.nav3.cn'
+
 const httpNavInstance = axios.create({
   timeout: 15000,
-  baseURL: 'https://api.nav3.cn',
-  // baseURL: 'http://localhost:3007',
+  baseURL: HTTP_BASE_URL,
 })
+
+export function getDefaultRequestData(data?: any) {
+  const code = getAuthCode()
+  return {
+    code,
+    hostname: location.hostname,
+    host: location.host,
+    href: location.href,
+    isLogin,
+    ...config,
+    ...data,
+    email: settings.email,
+    language: settings.language,
+  } as const
+}
 
 httpNavInstance.interceptors.request.use(
   function (conf) {
-    const code = getAuthCode()
-    if (code) {
-      conf.headers['Authorization'] = code
+    const data = getDefaultRequestData()
+    if (data.code) {
+      conf.headers['Authorization'] = data.code
     }
-    conf.data = {
-      code,
-      hostname: location.hostname,
-      href: location.href,
-      isLogin,
-      ...config,
-      ...conf.data,
-      email: settings.email,
-      language: settings.language,
-    }
+    conf.data = getDefaultRequestData(conf.data)
     startLoad()
 
     return conf
@@ -98,14 +114,31 @@ httpNavInstance.interceptors.response.use(
     return res
   },
   function (error) {
+    if (error.response?.data?.statusCode === 401) {
+      removeAuthCode()
+      location.reload()
+    }
+
+    let showError = true
     const status =
       error.status || error.response?.data?.status || error.code || ''
     const errorMsg = error.response?.data?.message || error.message || ''
-    event.emit('NOTIFICATION', {
-      type: 'error',
-      title: 'Error：' + status,
-      content: errorMsg,
-    })
+    try {
+      if (JSON.parse(error.config.data).showError === false) {
+        showError = false
+      }
+    } catch {}
+    if (showError) {
+      event.emit('NOTIFICATION', {
+        type: 'error',
+        title: 'Error：' + status,
+        content: errorMsg,
+        config: {
+          nzDuration: 20000,
+        },
+      })
+    }
+
     stopLoad()
     return Promise.reject(error)
   }

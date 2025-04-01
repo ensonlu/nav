@@ -1,7 +1,7 @@
 @media (max-width: 1280px) {
   .index-wrapper {
     --width: 800px;
-    --rightWidth: 200px;
+    --sideImagesWidth: 200px;
   }
   .index-wrapper.noimg {
     --width: 1000px;
@@ -12,7 +12,7 @@
   .index-wrapper {
     --width: 800px !important;
   }
-  .right {
+  .app-side {
     display: none;
   }
 }
@@ -47,24 +47,6 @@
     width: 320px;
     overflow: hidden;
     overflow-y: auto;
-  }
-  .right {
-    width: var(--rightWidth, 230px);
-    min-width: var(--rightWidth, 230px);
-    max-height: calc(100vh - 50px);
-    overflow: hidden;
-    overflow-y: auto;
-    .adsimg {
-      display: block;
-      width: 100%;
-      border-radius: 4px;
-    }
-    .aditem {
-      position: relative;
-      margin-bottom: 20px;
-      border-radius: 4px;
-      overflow: hidden;
-    }
   }
 }
 

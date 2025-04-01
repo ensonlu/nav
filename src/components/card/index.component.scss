@@ -1,7 +1,34 @@
+.card-parent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .stop-icon {
+    z-index: 3;
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  .quote {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    right: 5px;
+  }
+}
+
 .card-container {
   position: relative;
   width: 100%;
   height: 100%;
+  &:hover {
+    ::ng-deep {
+      .tag-action {
+        display: flex;
+      }
+    }
+  }
   ::ng-deep {
     img {
       max-width: 100%;
@@ -9,14 +36,6 @@
     }
     iframe {
       width: 100%;
-    }
-  }
-  .breadcrumb1 {
-    padding: 0 0 0 8px;
-    font-size: 12px;
-    color: #666;
-    .slash {
-      margin: 0 4px;
     }
   }
   .desc {
@@ -29,18 +48,12 @@
     word-break: break-all;
     color: rgba(0, 0, 0, 0.8);
   }
-  .stop-icon {
-    z-index: 3;
-    color: red;
-    font-weight: bold;
-    position: absolute;
-    top: 12px;
-    right: 12px;
-  }
 }
 
 .progrcode {
   cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .standard {
@@ -76,8 +89,8 @@
     }
   }
   .desc {
-    padding-bottom: 5px;
     font-size: 13px;
+    margin-bottom: 5px;
   }
   .actionbar {
     display: flex;
@@ -126,9 +139,7 @@
     width: 100%;
     font-weight: 500;
     line-height: 18px;
-  }
-  .breadcrumb1 {
-    padding: 0 0 4px 0;
+    font-size: 15px;
   }
   .wrapper {
     display: flex;
@@ -170,9 +181,6 @@
     width: 100%;
     font-weight: 500;
   }
-  .breadcrumb1 {
-    padding: 0 0 4px 0;
-  }
   .wrapper {
     display: flex;
   }
@@ -202,9 +210,6 @@
   transition: all 0.15s linear;
   color: #000;
   display: block;
-  .breadcrumb1 {
-    padding: 0 0 4px 0;
-  }
   &:hover {
     background-color: #f2f3f5;
     .action-btn {
@@ -237,29 +242,6 @@
     color: #8a919f;
     margin-right: 10px;
   }
-  .actions {
-    display: flex;
-    gap: 4px;
-    margin-left: 4px;
-  }
-  .action-btn {
-    color: #8a919f;
-    font-size: 12px;
-    display: none;
-    cursor: pointer;
-    &:hover {
-      color: #666;
-    }
-  }
-}
-
-::ng-deep {
-  .gutter-row .ant-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
 }
 
 // retro
@@ -287,7 +269,7 @@
     word-wrap: break-word;
     white-space: pre-wrap;
     font-size: 12px;
-    margin: 5px 0;
+    margin-bottom: 5px;
   }
 
   .top {
@@ -295,5 +277,63 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid #eee;
+  }
+  .border-transparent {
+    border-color: transparent;
+  }
+}
+
+// poster
+.poster2 {
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #fff;
+  padding-bottom: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  .poster-box {
+    position: relative;
+    overflow: hidden;
+    height: 170px;
+  }
+  .breadcrumb {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 0;
+    ::ng-deep {
+      .breadcrumb1 {
+        color: #fff;
+      }
+    }
+  }
+  .poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.2s linear;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  .title {
+    font-size: 16px;
+    margin-top: 5px;
+    font-weight: 500;
+    color: #000;
+  }
+  .desc {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  .bottom {
+    padding: 0 10px;
+  }
+  .poster-tag {
+    z-index: 2;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 10px 5px 10px;
   }
 }

@@ -36,6 +36,7 @@
     nz-tooltip
     [nzTooltipTitle]="$t('_addData')"
     class="common-show wrapper dark-bg dark-border-color dark-action-hover"
+    [class.rotate]="entering"
     (click)="goSystemPage()"
   >
     <i class="iconfont iconchuangjian"></i>
@@ -84,6 +85,7 @@
   <div
     class="wrapper dark-bg dark-border-color dark-action-hover"
     (click)="handleOpen()"
+    *ngIf="isShowFace"
   >
     <i
       class="iconfont font-bold"

@@ -4,10 +4,9 @@
 
 import { Component, Input } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { IComponentProps } from 'src/types'
+import type { IComponentProps } from 'src/types'
 import { $t } from 'src/locale'
 import dayjs from 'dayjs'
-import event from 'src/utils/mitt'
 
 @Component({
   standalone: true,
@@ -19,20 +18,15 @@ import event from 'src/utils/mitt'
 export class HolidayComponent {
   @Input() data!: IComponentProps
   items: any[] = []
-  $t = $t
+  readonly $t = $t
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnChanges() {
     this.init()
-    event.on('COMPONENT_OK', () => {
-      setTimeout(() => {
-        this.init()
-      }, 100)
-    })
   }
 
-  init() {
+  private init() {
     let items: any = {}
     const now = dayjs(dayjs().format('YYYY-MM-DD'))
     if (this.data['items']) {
